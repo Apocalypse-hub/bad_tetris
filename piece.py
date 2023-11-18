@@ -138,7 +138,19 @@ class Piece:
         for i in range(len(self.squareOffsets)):
             self.squareOffsets[i] = (self.squareOffsets[i][1],-self.squareOffsets[i][0])
         self.generateSquares()
-        if self.isColliding():
+        if not(self.isColliding()):
+            return
+        else:
+            for i in range(-2,3):
+                for j in range(1,-2,-1):
+                    self.anchor['x'] += i*self.gap
+                    self.anchor['y'] += j*self.gap
+                    self.generateSquares()
+                    if self.isColliding():
+                        self.anchor['x'] -= i*self.gap
+                        self.anchor['y'] -= j*self.gap
+                    else:
+                        return
             self.squareOffsets = offsetsCopy
 
     def r_rotate(self):
@@ -148,14 +160,27 @@ class Piece:
         for i in range(len(self.squareOffsets)):
             self.squareOffsets[i] = (-self.squareOffsets[i][1],self.squareOffsets[i][0])
         self.generateSquares()
-        if self.isColliding():
+        if not(self.isColliding()):
+            return
+        else:
+            for i in range(-2,3):
+                for j in range(1,-2,-1):
+                    self.anchor['x'] += i*self.gap
+                    self.anchor['y'] += j*self.gap
+                    self.generateSquares()
+                    if self.isColliding():
+                        self.anchor['x'] -= i*self.gap
+                        self.anchor['y'] -= j*self.gap
+                    else:
+                        return
             self.squareOffsets = offsetsCopy
 
     def isColliding(self):
+        staticCoords = [(static.x,static.y) for static in self.statics]
         for square in self.squares:
-                if (square.left,square.top) in self.statics:
+                if (square.left,square.top) in staticCoords:
                     return True
-                if square.top >= self.bottom or square.left < self.lBound or square.left >= self.rBound:
+                if square.top >= self.bottom or square.left <= self.lBound or square.left >= self.rBound:
                     return True
 
     def draw(self, surface):

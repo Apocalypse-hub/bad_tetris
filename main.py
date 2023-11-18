@@ -2,7 +2,7 @@ import pygame
 import game
 import tetris
 
-TITLE = "Tetris v0.6"
+TITLE = "Tetris v0.6.3"
 WINDOW_WIDTH  = 500
 WINDOW_HEIGHT = 500
 DESIRED_RATE  = 20
@@ -26,7 +26,7 @@ class PygameApp(game.Game):
             self.game.hold()
         
         if pygame.K_DOWN in keys:
-            movedDown = self.game.moveDown(False)
+            self.game.moveDown(False)
         if pygame.K_LEFT in keys:
             self.game.piece.moveLeft()
         if pygame.K_RIGHT in keys:
