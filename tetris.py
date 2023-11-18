@@ -35,7 +35,7 @@ class Tetris:
                 self.held = self.piece.pieceType
                 if len(self.bag) == 0:
                     self.makeBag()
-                ptype = random.choice(self.bag)
+                ptype = self.bag[0]
                 self.bag.remove(ptype)
                 self.piece = piece.Piece(self.gap, self.leftBound, self.rightBound, self.height, ptype)
 
@@ -48,7 +48,7 @@ class Tetris:
             self.piece.addStatic(pieceCopy)
         if len(self.bag) == 0:
             self.makeBag()
-        ptype = random.choice(self.bag)
+        ptype = self.bag[0]
         self.bag.remove(ptype)
         self.piece = piece.Piece(self.gap, self.leftBound, self.rightBound, self.height, ptype)
         self.clearLines()
