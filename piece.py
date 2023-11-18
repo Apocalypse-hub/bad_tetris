@@ -75,7 +75,12 @@ class Piece:
         self.squares: list[pygame.rect.Rect] = []
         for i in range(4):
             square = pygame.rect.Rect(self.anchor['x']+self.squareOffsets[i][0],self.anchor['y']+self.squareOffsets[i][1],self.gap,self.gap)
+            if self.pieceType == 'S' or self.pieceType == 'J' or self.pieceType == 'T':
+                square.left += self.gap
+            if self.pieceType == 'T':
+                square.top -= self.gap
             self.squares.append(square)
+
 
     def addStatic(self, piece):
         self.statics += [static.Static((square.left,square.top),self.color) for square in piece.squares]

@@ -52,7 +52,6 @@ class Tetris:
         self.bag.remove(ptype)
         self.piece = piece.Piece(self.gap, self.leftBound, self.rightBound, self.height, ptype)
         self.clearLines()
-        self.checkForLoss()
 
     def clearLines(self):
         for i in range(0,476,25):
@@ -65,10 +64,12 @@ class Tetris:
                         self.piece.statics[j].y += self.gap
 
     def checkForLoss(self):
+        staticCoords = [(static.x,static.y) for static in self.piece.statics]
         for square in self.piece.squares:
-            if (square.left,square.top) in self.piece.statics:
-                print("You lost")
+            if (square.left,square.top) in staticCoords:
                 self.__init__(self.width,self.height)
+                self.piece.statics.clear()
+                return
 
     def moveDown(self, forced):
         if self.piece.moveDown(forced):
@@ -81,6 +82,7 @@ class Tetris:
             self.ticker -= self.fallSeconds
             if push:
                 self.newPiece()
+                self.checkForLoss()
         self.piece.generateSquares()
 
     def draw(self, surface):
