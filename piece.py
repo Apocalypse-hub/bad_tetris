@@ -141,7 +141,10 @@ class Piece:
         if not(self.isColliding()):
             return
         else:
-            for i in range(-2,3):
+            xChecks = [1,-1,2,-2]
+            if self.pieceType == 'I':
+                xChecks = [1,-1,2,-2,3,-3]
+            for i in xChecks:
                 for j in range(1,-2,-1):
                     self.anchor['x'] += i*self.gap
                     self.anchor['y'] += j*self.gap
@@ -163,7 +166,10 @@ class Piece:
         if not(self.isColliding()):
             return
         else:
-            for i in range(-2,3):
+            xChecks = [1,-1,2,-2]
+            if self.pieceType == 'I':
+                xChecks = [1,-1,2,-2,3,-3]
+            for i in xChecks:
                 for j in range(1,-2,-1):
                     self.anchor['x'] += i*self.gap
                     self.anchor['y'] += j*self.gap
