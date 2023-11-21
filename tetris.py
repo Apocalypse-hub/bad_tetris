@@ -75,6 +75,12 @@ class Tetris:
         if self.piece.moveDown(forced):
             self.ticker = 0
 
+    def hardDrop(self):
+        while not(self.piece.moveDown(True)):
+            pass
+        self.newPiece()
+        self.checkForLoss()
+
     def evolve(self, dt):
         self.ticker += dt
         if self.ticker >= self.fallSeconds:
@@ -83,7 +89,7 @@ class Tetris:
             if push:
                 self.newPiece()
                 self.checkForLoss()
-        self.piece.generateSquares()
+        self.piece.makeGhost()
 
     def draw(self, surface):
         pygame.draw.rect(surface, (0,0,0), (0, 0, self.width, self.height))

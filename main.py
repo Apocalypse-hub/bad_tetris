@@ -2,7 +2,7 @@ import pygame
 import game
 import tetris
 
-TITLE = "Tetris v0.6.3"
+TITLE = "Tetris v0.6.4"
 WINDOW_WIDTH  = 500
 WINDOW_HEIGHT = 500
 DESIRED_RATE  = 20
@@ -27,9 +27,11 @@ class PygameApp(game.Game):
         
         if pygame.K_DOWN in keys:
             self.game.moveDown(False)
-        if pygame.K_LEFT in keys:
+        if pygame.K_SPACE in newkeys:
+            self.game.hardDrop()
+        elif pygame.K_LEFT in keys:
             self.game.piece.moveLeft()
-        if pygame.K_RIGHT in keys:
+        elif pygame.K_RIGHT in keys:
             self.game.piece.moveRight()
         
         if pygame.K_z in newkeys:
@@ -38,7 +40,7 @@ class PygameApp(game.Game):
             self.game.piece.r_rotate()
         
         if pygame.K_BACKSLASH in newkeys:
-            print(self.game.piece.statics)
+            print(self.game.piece.anchor)
         #
         # buttons contains all mouse buttons currently held down
         # newbuttons contains all buttons pressed since the last frame

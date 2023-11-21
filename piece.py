@@ -56,8 +56,8 @@ class Piece:
         self.pieceColor = {
             'O' : (255,255,0),
             'I' : (0,255,255),
-            'S' : (255,0,0),
-            'Z' : (0,255,0),
+            'S' : (0,255,0),
+            'Z' : (255,0,0),
             'L' : (255,165,0),
             'J' : (0,0,255),
             'T' : (255,0,255)
@@ -70,6 +70,7 @@ class Piece:
         self.bottom = bottom
         self.anchor = {'x':gap*9,'y':gap}
         self.generateSquares()
+        self.makeGhost()
 
     def generateSquares(self):
         self.squares: list[pygame.rect.Rect] = []
@@ -80,7 +81,6 @@ class Piece:
             if self.pieceType == 'T':
                 square.top -= self.gap
             self.squares.append(square)
-
 
     def addStatic(self, piece):
         self.statics += [static.Static((square.left,square.top),self.color) for square in piece.squares]
@@ -186,9 +186,25 @@ class Piece:
         for square in self.squares:
                 if (square.left,square.top) in staticCoords:
                     return True
-                if square.top >= self.bottom or square.left <= self.lBound or square.left >= self.rBound:
+                if square.top >= self.bottom or square.left < self.lBound or square.left >= self.rBound:
                     return True
+        return False
 
+    def makeGhost(self):
+        self.ghostSquares: list[pygame.rect.Rect] = []
+        backupY = self.anchor['y']
+        while self.isColliding() == False:
+            self.anchor['y'] += self.gap
+            self.generateSquares()
+        for square in self.squares:
+            square.top -= self.gap
+            self.ghostSquares.append(square)
+        self.anchor['y'] = backupY
+        self.generateSquares()
+        
     def draw(self, surface):
+            for square in self.ghostSquares:
+                pygame.draw.rect(surface,(255,255,255),square)
+
             for square in self.squares:
                 pygame.draw.rect(surface,self.color,square)
