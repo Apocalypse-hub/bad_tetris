@@ -2,6 +2,7 @@ import pygame
 import piece
 import random
 import copy
+import displaypiece
 
 class Tetris:
     
@@ -17,12 +18,14 @@ class Tetris:
         self.rightBound = self.width-125
         self.piece = "placeholder"
         self.held = ""
-        self.makeBag()
+        self.bag = []
+        self.addBag()
         self.newPiece()
 
-    def makeBag(self):
-        self.bag = ['O','I','T','L','J','S','Z']
-        random.shuffle(self.bag)
+    def addBag(self):
+        pieces = ['O','T','I','L','J','S','Z']
+        random.shuffle(pieces)
+        self.bag += pieces
 
     def hold(self):
         if not(self.alreadyHeld):
@@ -33,10 +36,11 @@ class Tetris:
                 self.held = currentptype
             else:
                 self.held = self.piece.pieceType
-                if len(self.bag) == 0:
-                    self.makeBag()
                 ptype = self.bag[0]
                 self.bag.remove(ptype)
+                if len(self.bag) == 4:
+                    self.addBag()
+                self.nextFourPieces = self.bag[0:4]
                 self.piece = piece.Piece(self.gap, self.leftBound, self.rightBound, self.height, ptype)
 
     
@@ -46,10 +50,11 @@ class Tetris:
             pieceCopy = copy.deepcopy(self.piece)
             self.squares += pieceCopy.squares
             self.piece.addStatic(pieceCopy)
-        if len(self.bag) == 0:
-            self.makeBag()
         ptype = self.bag[0]
         self.bag.remove(ptype)
+        if len(self.bag) == 4:
+            self.addBag()
+        self.nextFourPieces = self.bag[0:4]
         self.piece = piece.Piece(self.gap, self.leftBound, self.rightBound, self.height, ptype)
         self.clearLines()
 
@@ -91,6 +96,10 @@ class Tetris:
                 self.checkForLoss()
         self.piece.makeGhost()
 
+    def drawUpcoming(self, surface):
+        for index,y in enumerate(range(self.gap,20*self.gap,5*self.gap)):
+            displaypiece.DisplayPiece(self.nextFourPieces[index]).draw(surface, (self.rightBound + 2*self.gap, y))
+
     def draw(self, surface):
         pygame.draw.rect(surface, (0,0,0), (0, 0, self.width, self.height))
         for i in range(0,self.height,self.gap):
@@ -101,4 +110,9 @@ class Tetris:
         for square in self.piece.statics:
             pygame.draw.rect(surface,square.color,pygame.rect.Rect(square.x,square.y,self.gap,self.gap))
         
+        self.drawUpcoming(surface)
+
+        if self.held:
+            displaypiece.DisplayPiece(self.held).draw(surface, (self.gap,2*self.gap))
+
         self.piece.draw(surface)

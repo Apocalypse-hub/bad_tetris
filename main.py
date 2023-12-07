@@ -2,7 +2,7 @@ import pygame
 import game
 import tetris
 
-TITLE = "Tetris v0.6.4"
+TITLE = "Tetris v0.7"
 WINDOW_WIDTH  = 500
 WINDOW_HEIGHT = 500
 DESIRED_RATE  = 20
